@@ -1,0 +1,5 @@
+ALX, 570
+JUA, 0
+RIC, 670
+TIT, 0
+ZAZ, 10
