@@ -1,0 +1,21 @@
+-Premier exemple = coefficient binomial
+(n! / ((k!)*((n - k)!)))
+
+
+-Overload = chances strictement supérieur à 25 additionner puis multiplier par 100
+-The probabily of getting x call in y second. Binomial distribution
+
+
+
+
+binomial coefficient *
+n = k   k = n
+binomial coefficient : n 0->50;
+C(K N)
+C(N K)
+C 0 180
+
+
+P(X=0)  = C 0/180 * (25/3500) * (3575/3500)
+
+

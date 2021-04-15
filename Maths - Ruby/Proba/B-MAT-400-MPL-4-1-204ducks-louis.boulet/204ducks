@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+
+def help
+    puts "USAGE
+    ./204ducks a
+
+DESCRIPTION
+    a       constant"
+end 
+
+def wayback(mini, a)
+    i = 1.0
+    while (1)
+        if (get_density(a, i / 60) - get_density(a, 0) >= mini)
+            return (i)
+        end 
+        i+=0.01
+    end 
+end 
+
+def get_density(a, t)
+    result = 0.0
+    result = -a * Math.exp(-t) - (4 - 3 * a) / 2 * Math.exp(-2 * t) - (2 * a - 4) / 4 * Math.exp(-4 * t)
+    return (result)
+end 
+
+
+def get_density2(a, t)
+    result = 0.0
+    result = a * Math.exp(-t) + (4 - 3 * a) * Math.exp(-2 * t) + (2 * a - 4) * Math.exp(-4 * t)
+    return (result)
+end 
+
+
+
+def averageReturnTime(t)
+    i = 0.0
+    total = 0
+    y = 0
+    while i <= 1.0 do
+        total += wayback(i, t)
+        i+= 0.002
+        y += 1
+    end
+    return (total/y)
+end
+
+def standartDeviation(t, averageTime)
+    total = 0.0
+    i = 0.0
+    y = 0
+    while i <= 1.0 do
+        total += ((wayback(i, t) - averageTime)**2)
+        i+= 0.01
+        y+= 1
+    end
+    total /= y
+    return Math.sqrt(total)
+end
+
+def ducks(val)
+    if !(  0.0 <= val && val <= 2.5)
+        exit 84
+    end
+    p = 0
+    r = 0
+    t = 0
+    
+    while p < 99.9999 do
+        p += get_density2(val, t) / 10
+        r += (get_density2(val, t) / 10) * t
+        t += 0.001
+    end
+    r /= 99.9999
+    r += 1./60
+    rBis = r * 60 + 1
+    printf("Average return time: %dm %02ds\n" % rBis.divmod(60))
+    d = 0
+    while t > 0 do
+        d += ((t - r) ** 2) * (get_density2(val, t) / 10)
+        t -= 0.001
+    end
+    d /= 99.9999
+    d = d ** 0.5
+    # averageTime = averageReturnTime(val) + 1
+    # deviation = standartDeviation(val, averageTime)
+    # printf("Average return time: %dm %d%ds\n",averageTime / 60, averageTime % 60 / 10, averageTime % 10)
+    printf("standard deviation: %0.3f\n",d)
+    n = wayback(0.5, val)
+    printf("time after which 50%% of the ducks are back: %dm %d%ds\n",n / 60, n % 60 / 10, n % 10)
+    n = wayback(0.99, val)
+    printf("time after which 99%% of the ducks are back: %dm %d%ds\n",n / 60, n % 60 / 10, n % 10)
+    printf("percentage of ducks back after 1 minute: %0.1f%%\n", ((get_density(val, 1) - get_density(val, 0)) * 100))
+    printf("percentage of ducks back after 2 minutes: %0.1f%%\n", ((get_density(val, 2) - get_density(val, 0)) * 100))
+end 
+
+ 
+
+def main
+    if( ARGV.length() != 1)
+        exit 84
+    end 
+    if( ARGV[0] == "-h")
+        help()
+    end
+    ducks(ARGV[0].to_f)       
+end
+
+main

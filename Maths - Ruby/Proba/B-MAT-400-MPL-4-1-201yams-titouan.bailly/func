@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+def main()
+    result = getThreePurcent(2)
+    printf("%.2f\n", result)
+    return 0
+end
+
+
+def getYamsPurcent(nbCorrect)
+    nbIncorrect = 5 - nbCorrect
+    return (((1.0/6.0) ** nbIncorrect) * 100.0)
+end
+
+def getPairPurcent(nbCorrect)
+    if nbCorrect >= 2
+        return 100
+    elsif nbCorrect == 0
+        result = (120.0/(2.0 * 6.0)) * ((5.0/6.0) ** 3) * ((1.0/6.0) ** 2)
+        return result * 100
+    else
+        result = ((5.0/6.0) ** 4)
+        return (1.0 - result) * 100
+    end
+end
+
+def getThreePurcent(nbCorrect)
+    if nbCorrect >= 3
+        return 100
+    elsif nbCorrect == 0
+        result2 = (120.0/(6.0 * 2.0)) * ((5.0/6.0) ** 2) * ((1.0/6.0) ** 3)
+        return result2 * 100
+    elsif nbCorrect == 1
+        result = (24/(2.00 * 2.0)) * ((5.0/6.0) ** 2) * ((1.0/6.0) ** 2)
+        return result * 100
+    elsif nbCorrect == 2
+        result = ((5.0/6.0) ** 3)
+        return (1 - result) * 100
+    end
+end

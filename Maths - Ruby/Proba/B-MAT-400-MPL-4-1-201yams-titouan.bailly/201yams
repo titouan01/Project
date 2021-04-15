@@ -1,0 +1,286 @@
+#!/usr/bin/env ruby
+
+$chanceTwoDiceFIVE = ((120.0/(6.0 * 2.0)) * ((5.0/6.0) ** 3) * ((1.0/6.0) ** 2))
+$chanceThreeDiceFIVE = ((120.0/(6.0 * 2.0)) * ((5.0/6.0) ** 2) * ((1.0/6.0) ** 3))
+$chanceFourDiceFIVE = (120.0/(24.0 * 1.0)) * ((5.0/6.0) ** 1) * ((1.0/6.0) ** 4)
+$chanceFiveDiceFIVE = (120.0/(120.0 * 1.0)) * ((5.0/6.0) ** 0) * ((1.0/6.0) ** 5)
+
+$chanceTwoDiceFOUR = ((24.0/(4.0 * 4.0)) * ((5.0/6.0) ** 2) * ((1.0/6.0) ** 2))
+$chanceThreeDiceFOUR = ((24.0/(6.0 * 1.0)) * ((5.0/6.0) ** 1) * ((1.0/6.0) ** 3))
+$chanceFourDiceFOUR = (24.0/(24.0 * 1.0)) * ((5.0/6.0) ** 0) * ((1.0/6.0) ** 4)
+
+$chanceTwoDiceTHREE = ((6.0/(4.0 * 1.0)) * ((5.0/6.0) ** 1) * ((1.0/6.0) ** 2))
+$chanceThreeDiceTHREE = ((6.0/(6.0 * 1.0)) * ((5.0/6.0) ** 0) * ((1.0/6.0) ** 3))
+
+def getYamsPurcent(nbCorrect)
+    nbIncorrect = 5 - nbCorrect
+    return (((1.0/6.0) ** nbIncorrect) * 100.0)
+end
+
+def getPairPurcent(nbCorrect)
+    if nbCorrect >= 2
+        return 100
+    elsif nbCorrect == 0
+        result =  $chanceTwoDiceFIVE + $chanceThreeDiceFIVE + $chanceFourDiceFIVE + $chanceFiveDiceFIVE
+        return result * 100
+    else
+        result = ((5.0/6.0) ** 4)
+        return (1.0 - result) * 100
+    end
+end
+
+def getThreePurcent(nbCorrect)
+    if nbCorrect >= 3
+        return 100
+    elsif nbCorrect == 0
+        result2 = $chanceThreeDiceFIVE + $chanceFourDiceFIVE + $chanceFiveDiceFIVE
+        return result2 * 100
+    elsif nbCorrect == 1
+        result = $chanceTwoDiceFOUR + $chanceThreeDiceFOUR + $chanceFourDiceFOUR
+        return result * 100
+    elsif nbCorrect == 2
+        result = ((5.0/6.0) ** 3)
+        return (1 - result) * 100
+    end
+end
+
+def getFourPurcent(nbCorrect)
+    if nbCorrect >= 4
+        return 100
+    elsif nbCorrect == 0
+        result2 = $chanceFourDiceFIVE + $chanceFiveDiceFIVE
+        return result2 * 100
+    elsif nbCorrect == 1
+        result = $chanceThreeDiceFOUR + $chanceFourDiceFOUR
+        return result * 100
+    elsif nbCorrect == 2
+        result = $chanceTwoDiceTHREE + $chanceThreeDiceTHREE
+        return result * 100
+    elsif nbCorrect == 3
+        result = ((5.0/6.0) ** 2)
+        return (1 - result) * 100
+    end
+end
+
+def straightPurcent(nbCorrect)
+    nbDice = 5.0 - nbCorrect
+    result = 1.0
+    if (nbCorrect == 5)
+        return 100
+    elsif (nbCorrect == 4)
+        result = (1.0/6.0)
+    elsif (nbCorrect == 3)
+        result = (2.0/(6.0 ** 2))
+    elsif (nbCorrect == 2)
+        result = (6.0/(6.0 ** 3))
+    elsif (nbCorrect == 1)
+        result = (24.0/(6.0 ** 4))
+    elsif (nbCorrect == 0)
+        result = (120.0/(6.0 ** 5))
+    end
+    return result * 100
+end
+
+def getProba(up, down)
+    nb1 = 1.0
+    nb2 = 1.0
+    nb3 = 1.0
+    upDown = down - up
+    while (up != 0) do
+        nb1 *= up
+        up -= 1
+    end
+    while (down != 0) do
+        nb2 *= down
+        down -= 1
+    end
+    while (upDown != 0) do
+        nb3 *= upDown
+        upDown -= 1
+    end
+    return (nb2/(nb1 * nb3))
+
+
+end
+def fullPurcent(nbCorrect1, nbCorrect2)
+    result = 1.0
+    nbDiceLeft1 = 3.0 - (nbCorrect1)
+    nbDiceLeft2 = 2.0 - (nbCorrect2)
+    nbCorrect = nbCorrect1 + nbCorrect2
+    if ((nbCorrect1 + nbCorrect2) == 5)
+        return 100
+    end
+
+    if (nbCorrect == 5)
+        return 100
+    elsif (nbCorrect == 4)
+        if (nbDiceLeft1 != 0)
+            result = ((getProba(nbDiceLeft1,1.0))/(6.0 ** 1))
+        else
+            result = ((getProba(nbDiceLeft2,1.0))/(6.0 ** 1))
+        end
+    elsif (nbCorrect == 3)
+        if (nbDiceLeft1 != 0)
+            result = ((getProba(nbDiceLeft1,2.0))/(6.0 ** 2))
+        else
+            result = ((getProba(nbDiceLeft2,2.0))/(6.0 ** 2))
+        end
+    elsif (nbCorrect == 2)
+        result = ((getProba(nbDiceLeft1,3.0))/(6.0 ** 3))
+    elsif (nbCorrect == 1)
+        result = ((getProba(3,4.0))/(6.0 ** 4))
+    elsif (nbCorrect == 0)
+        result = (getProba(3.0,5.0)/(6.0 ** 5))
+    end
+    return result * 100
+end
+
+def pair(list, nb1)
+    similar = 0
+    for i in list do
+        if (i == nb1)   
+            similar = similar + 1
+        end 
+      end
+    printf("Chances to get a %d pair: %0.2f%%\n", nb1, getPairPurcent(similar))
+end 
+
+def three(list, nb1)
+    similar = 0
+    for i in list do
+        if (i == nb1)
+            similar = similar + 1
+        end
+      end
+    printf("Chances to get a %d three-of-a-kind: %0.2f%%\n", nb1, getThreePurcent(similar))
+end 
+
+def four(list, nb1)
+    similar = 0
+    for i in list do
+        if (i == nb1)
+            similar = similar + 1
+        end 
+      end
+    printf("Chances to get a %d four-of-a-kind: %0.2f%%\n", nb1, getFourPurcent(similar))
+end 
+
+def full(list, nb1,nb2)
+    similar = 0
+    similar2 = 0
+
+    for i in list do
+        if (i == nb1 && similar < 3)
+            similar = similar + 1
+        end 
+      end
+      for i in list do
+        if (i == nb2 && similar2 < 2)
+            similar2 = similar2 + 1
+        end 
+      end
+    printf("Chances to get a %d full of %d: %0.2f%%\n", nb1, nb2, fullPurcent(similar, similar2))
+end 
+
+def straight(list, nb1)
+    similar = 0
+    start = 1
+    quit = 0
+    done = false
+    if (nb1 == 6)
+        start += 1
+    end
+    while start <= nb1 do
+        keep = start
+        for i in list do
+            
+            if (i == (start) && done == false)
+                similar = similar + 1
+                done = true
+            end 
+        end
+        start += 1
+        done = false
+    end
+    printf("Chances to get a %d straight: %0.2f%%\n", nb1, straightPurcent(similar))
+end 
+
+def yams(list, nb1)
+    similar = 0
+    for i in list do
+        if (i == nb1)
+            similar = similar + 1
+        end 
+    end
+    printf("Chances to get a %d yams: %0.2f%%\n", nb1, getYamsPurcent(similar))
+end 
+
+def check_arg(d1, d2, d3, d4, d5, type)
+
+    
+    if !(d1 >= 0 && d1 <= 6 && d2 >= 0 && d2 <= 6 && d3 >= 0 && d3 <= 6 && d4 >= 0 && d4 <= 6 && d5 >= 0 && d5 <= 6)
+        exit 84 
+    end 
+    list = [d1, d2, d3, d4, d5]
+    type_check = type.split('_')
+    if(type_check.length() != 2 && type_check.length() != 3)
+        exit 84
+    end
+    if(!(type_check[1].count("^0-9").zero?))
+        exit 84
+    end 
+    if (type_check.length() == (2) && !(type_check[1].to_i  > 0 && type_check[1].to_i <= 6))
+                exit 84
+        end 
+    if (type_check[1].length() == (3) && !( type_check[1].to_i  > 0 && type_check[1].to_i  <= 6 && type_check[2].to_i  > 0 && type_check[2].to_i  <= 6))
+                exit 84
+    end
+    if(type_check[0] == "pair" && type_check.length() == (2))
+        pair(list, type_check[1].to_i)
+    elsif (type_check[0] == "three" && type_check.length() == (2))
+        three(list, type_check[1].to_i)
+    elsif (type_check[0] == "four" && type_check.length() == (2))
+        four(list, type_check[1].to_i)
+    elsif (type_check[0] == "full" && type_check.length() == (3) && (type_check[1].to_i != type_check[2].to_i) && (type_check[1].to_i  > 0 && type_check[1].to_i <= 6) && (type_check[2].to_i  > 0 && type_check[2].to_i <= 6))
+        if(!(type_check[2].count("^0-9").zero?))
+            exit 84
+        end 
+        full(list, type_check[1].to_i, type_check[2].to_i)
+    elsif (type_check[0] == "straight"&& type_check.length() == (2) && ( type_check[1].to_i == 5 ||  type_check[1].to_i == 6))
+        straight(list, type_check[1].to_i)
+    elsif (type_check[0] == "yams" && type_check.length() == (2))
+        yams(list, type_check[1].to_i)
+    else 
+        exit 84
+    end
+        
+end 
+
+def main()
+    if ARGV[0] == "-h"
+        puts "USAGE
+        ./201yams d1 d2 d3 d4 d5 c
+DESCRIPTION
+    d1 value of the first die (0 if not thrown)
+    d2 value of the second die (0 if not thrown)
+    d3 value of the third die (0 if not thrown)
+    d4 value of the fourth die (0 if not thrown)
+    d5 value of the fifth die (0 if not thrown)
+    c expected combination"
+        exit 0
+    end
+    if ARGV.length != 6
+        puts "We need exactly 6 arguments"
+        exit 84
+      end
+      d1 = ARGV[0].to_i
+      d2 = ARGV[1].to_i
+      d3 = ARGV[2].to_i
+      d4 = ARGV[3].to_i 
+      d5 = ARGV[4].to_i 
+      type  = ARGV[5]
+    check_arg(d1, d2, d3, d4, d5, type)
+    return 0
+end
+
+main()

@@ -1,0 +1,108 @@
+#!/usr/bin/env ruby
+
+def fact(a)
+    (1..a).reduce(:*) || 1
+end
+
+def law_coefbino(n, k)
+    res = 0
+    a = fact(n)
+    b = fact(k)
+    c = fact(n - k)
+    res = (a / (b * c)).floor
+    return (res)
+end
+
+
+def lawbinomiale(arg)
+    n = 0
+    probaCall = arg/(3600.0 * 8)
+    res = 0
+    b = 0
+    timeBegin = Time.new
+    coefBino = law_coefbino(3500, n)
+    res = coefBino * ((probaCall)**3500) * ((1-probaCall)**(n - 3500))
+    printf("Binomial distribution:\n%d -> %0.3f ",0, res)
+    for n in (1..50) do
+        coefBino = law_coefbino(3500, n)
+        res = coefBino * ((probaCall)**n) * ((1-probaCall)**(3500 - n))
+        if (n >= 26)
+            b += res;
+        end
+        if (n > 0 && ((n % 5) != (0)))
+            printf("\t")
+        end 
+        printf("%i -> %0.3f",n, res)
+        if ((n +1) % 5 == 0)
+            puts ""
+        end 
+    end
+    b *= 100
+    timeEnd = Time.new
+    ellapsedTime = timeEnd - timeBegin
+    printf("\nOverload: %0.1f%%\nComputation time: %0.2f ms\n\n", b, ellapsedTime)
+end 
+
+def lawpoisson(arg)
+    b = 0
+    probaCall = (arg/(3600.0 * 8.0)) * 3500
+    res = (Math.exp(-probaCall)*(probaCall**0))/fact(0)
+    timeBegin = Time.new
+    printf("Poisson distribution:\n%d -> %0.3f ",0, res)
+    for n in (1..50) do
+        res = ((Math.exp(-probaCall)*(probaCall**n))/fact(n))
+        if (n >= 26)
+            b += res;
+        end
+        if (n > 0 && ((n % 5) != (0)))
+            printf("\t")
+        end 
+        printf("%i -> %0.3f",n, res)
+        if ((n +1) % 5 == 0)
+            puts ""
+        end 
+    end
+    timeEnd = Time.new
+    ellapsedTime = timeEnd - timeBegin
+    b *= 100
+    printf("\nOverload: %0.1f%%\nComputation time: %0.2f ms\n", b, ellapsedTime)
+end 
+
+def help
+    puts"USAGE
+    ./203hotline [n k | d]
+DESCRIPTION
+    n n value for the computation of C(n, k)
+    k k value for the computation of C(n, k)
+    d average duration of calls (in seconds)"
+    exit 0
+end 
+
+def check_param(string)
+    string.scan(/^\d+$/).any?
+end 
+
+def main 
+    if ARGV.size != 1 && ARGV.size != 2
+        puts "Get out of my way"
+        exit 84
+    end 
+    if (ARGV.size == 1  && ARGV[0] == "-h")
+      help()
+    end
+    if (ARGV.size == 1)
+        if (!check_param(ARGV[0]) || ARGV[0].to_i == 0 || ARGV[0].to_i < 0)
+            exit 84
+        end 
+        lawbinomiale(ARGV[0].to_i)
+        lawpoisson(ARGV[0].to_i)
+    elsif (ARGV.size == 2)
+        if (!check_param(ARGV[0]) || !check_param(ARGV[1]) || ARGV[0].to_f == 0 || ARGV[1].to_f == 0  || ARGV[0].to_f < 0 || ARGV[0].to_f < 0)
+            exit 84
+        else 
+            printf("%s-combinations of a set of size %s:\n%u\n", ARGV[1],ARGV[0], law_coefbino( ARGV[0].to_i, ARGV[1].to_i))
+        end 
+    end
+end 
+
+main 
